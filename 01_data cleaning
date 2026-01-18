@@ -1,0 +1,70 @@
+# ###########################
+# 01_data cleaning
+# J. Vaccaro
+# jpvaccaro@gmail.com
+# 1/17/26
+# ###########################
+
+
+## Codebook
+# https://r-packages.io/datasets/lung
+
+glimpse(lung)
+
+df_lung_raw <- lung %>% 
+  glimpse()
+# Rows: 228
+
+# Q - is the data unique at the pt-level?
+
+# view all variables
+
+# inst: Institution code
+df_lung_raw %>% count(inst)
+
+# time: Survival time in days
+df_lung_raw %>% count(time)
+
+# status: censoring status 1=censored, 2=dead
+df_lung_raw %>% count(status)
+
+# age: Age in years
+df_lung_raw %>% count(age)
+
+# sex: Male=1 Female=2
+df_lung_raw %>% count(sex)
+
+# ph.ecog: ECOG performance score as rated by the physician. 0=asymptomatic, 1= symptomatic but completely ambulatory, 2= in bed <50% of the day, 3= in bed > 50% of the day but not bedbound, 4 = bedbound
+df_lung_raw %>% count(ph.ecog)
+
+# ph.karno: Karnofsky performance score (bad=0-good=100) rated by physician
+df_lung_raw %>% count(ph.karno)
+
+# pat.karno: Karnofsky performance score (0 = bad, 100 = good) as rated by patient
+df_lung_raw %>% count(pat.karno)
+
+# meal.cal: Calories consumed at meals
+df_lung_raw %>% count(meal.cal)
+
+# wt.loss: Weight loss in last six months
+df_lung_raw %>% count(wt.loss)
+
+
+# ### recode variables
+# relabel cat vars
+# transform DV to months
+# relabel IV to 1/0
+# etc
+
+df_lung_2 <- df_lung_raw %>% 
+  mutate(
+    status_recode = case_when(
+      status == 1 ~ 0, # censored
+      status == 2 ~ 1  # event
+    ),
+    sex_recode = case_when (
+      sex == 1 ~ "Male",
+      sex == 2 ~ "Female"
+    )
+  ) %>% 
+  glimpse()
