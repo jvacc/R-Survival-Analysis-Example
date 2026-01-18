@@ -1,0 +1,29 @@
+# ###########################
+# 99_output to Excel
+# J. Vaccaro
+# jpvaccaro@gmail.com
+# 1/17/26
+# ###########################
+
+# ### List OUTPUTs
+# baselines
+# outcome
+# KM descriptives
+# KM plot
+# Cox model
+
+
+# Export the formatted table to an Excel file
+t1_hux <- as_hux_table(t1_base) 
+t2_hux <- as_hux_table(t2_outcome)
+t3_hux <- as_hux_table(t3_outcome)
+
+wb <- openxlsx::createWorkbook()
+huxtable::as_Workbook(t1_hux, wb, sheet = "Table 1")
+huxtable::as_Workbook(t2_hux, wb, sheet = "Table 2")
+huxtable::as_Workbook(t3_hux, wb, sheet = "Table 3")
+
+openxlsx::saveWorkbook(wb, "~/Word Documents/Survival Analysis in R_18Jan2026.xlsx", overwrite = TRUE)
+
+# manual copy
+t2_outcome_plot
