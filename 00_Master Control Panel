@@ -1,0 +1,37 @@
+# ###########################
+# 00_Master Control Panel
+# J. Vaccaro
+# jpvaccaro@gmail.com
+# 1/17/26
+# ###########################
+
+# high level overview & documentation
+# Research question: 
+#   Is there a difference between men and women in overall survival of lung cancer?
+
+
+# Install from CRAN
+# install.packages(c("tidyverse", "gtsummary", "survival", "survminer"))
+# install.packages("ggsurvfit")
+# install.packages("smd")
+# install.packages(c("huxtable", "openxlsx"))
+
+
+# libraries
+library(tidyr)
+library(dplyr)
+library(gt)
+library(gtsummary)
+library(survival) # core survival analysis functions
+library(survminer) # recommended for visualizing survival curves
+library(ggplot2)
+library(ggsurvfit)
+library(smd)
+library(huxtable)
+library(openxlsx)
+
+
+# data source
+# r survival package datasets
+# glimpse(aml)
+glimpse(lung)
