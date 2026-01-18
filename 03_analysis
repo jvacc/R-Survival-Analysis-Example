@@ -1,0 +1,84 @@
+# ###########################
+# 03_analysis
+# J. Vaccaro
+# jpvaccaro@gmail.com
+# 1/17/26
+# ###########################
+
+
+
+df <- df_lung_2
+
+# Kaplan Meier
+# descriptive of DV Overall and by Sex
+
+dv_desc_1 <- tbl_survfit(
+    label = sex_recode ~ "Sex",
+    list( survfit(Surv(time, status_recode) ~ 1, data = df),
+          survfit(Surv(time, status_recode) ~ sex_recode, data = df)
+      ),
+    times = c(365.25, 730.5, 1095.75),
+    label_header = "**{time} Days**"
+    )
+
+dv_desc_2 <- tbl_survfit(
+    df,
+    y = Surv(time, status_recode),
+    include = c(sex_recode),
+    probs = 0.5,
+    label_header = "**Median Survival (Days)**",
+    label = sex_recode ~ "Sex"
+  ) %>% 
+    add_p()
+
+# merge dv_desc_*
+# OUTPUT
+t2_outcome <- tbl_merge(list(dv_desc_1, dv_desc_2), tab_spanner = FALSE)
+
+# check
+t2_outcome
+
+
+# plot
+KM <- survfit(Surv(time, status_recode) ~ sex_recode, data = df)
+
+# OUTPUT
+t2_outcome_plot <- KM %>% 
+  ggsurvfit() +
+  labs(
+    x = "Days",
+    y = "Overall survival probability",
+    title = "Overall survival of lung cancer by sex"
+  ) + 
+  add_confidence_interval() +
+  add_risktable() +
+  add_quantile(y_value = 0.5, color = "gray50", linewidth = 0.75) +
+  scale_color_manual(values = c('magenta', 'blue'), labels = c('Female', 'Male')) +
+  scale_fill_manual(values = c('magenta', 'blue'), labels = c('Female', 'Male'))
+
+# check
+t2_outcome_plot
+
+# Cox PH Model
+glimpse(df)
+
+cox <- coxph(Surv(time, status_recode) ~ sex_recode + age + wt.loss + meal.cal + ph.ecog,
+             data = df)
+
+# check
+summary(cox)
+
+# OUTPUT
+t3_outcome <- tbl_regression(cox, 
+                             exponentiate = TRUE,
+                             label = list(
+                               sex_recode ~ "Sex",
+                               age ~ "Age",
+                               wt.loss ~ "Weight loss in last six months",
+                               meal.cal ~ "Calories at meals",
+                               ph.ecog ~ "ECOG score (physician rated)"
+                              )
+                             )
+# check
+t3_outcome
+
