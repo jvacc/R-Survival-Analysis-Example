@@ -1,0 +1,34 @@
+# ###########################
+# 02_baseline
+# J. Vaccaro
+# jpvaccaro@gmail.com
+# 1/17/26
+# ###########################
+
+theme_gtsummary_compact()
+
+# check input
+glimpse(df_lung_2) 
+
+# OUTPUT
+t1_base <- df_lung_2 %>% 
+  tbl_summary( label = list(age ~ "Age",
+                            meal.cal ~ "Calories at meals",
+                            wt.loss ~ "Weight loss in last six months",
+                            ph.ecog ~ "ECOG score (physician rated)",
+                            ph.karno ~ "Karnofsky Score (physician rated)"),
+               include = c(age, sex_recode, meal.cal, wt.loss, ph.ecog, ph.karno),
+               by = sex_recode,
+               type = all_continuous() ~ "continuous2",
+               statistic = all_continuous() ~ c(
+                 "{mean} ({sd})",
+                 "{median} [{p25}, {p75}]",
+                 "{min}, {max}"),
+               missing = "ifany",
+               digits = list(all_continuous() ~ 1, all_categorical() ~ c(0,1))
+               ) %>% 
+  bold_labels() %>% 
+  add_difference()
+
+# check
+t1_base
